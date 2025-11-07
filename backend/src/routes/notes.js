@@ -1,6 +1,9 @@
 import express from "express";
+import Notes from "../models/Notes.js";
+
+const app = express();
 const router = express.Router();
-import Notes from "../models/Notes";
+
 
 // GET /api/notes?userId=abc123 -> List (optionally filter by userId) => READ
 router.get("/", async (req, res) => {
@@ -27,3 +30,27 @@ router.post("/", async (req, res) => {
     res.status(500).json({ message: "Error creating note" });
   }
 });
+
+// PUT /api/notes/:id UPDATE
+router.put("/:id", async (req, res) => { 
+  const { id } = req.params;
+  const { title, content } = req.body;
+
+  const updatedNote = await Notes.findByIdAndUpdate(
+    id,
+    { $set: { title, content } },
+    { new: true }
+  );
+  if (!updatedNote) return res.status(404).json({ message: "Note not found" });
+  res.json(updatedNote);
+});
+
+// DELETE /api/notes/:id
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  const deletedNote = await Notes.findByIdAndDelete({ _id: id });
+  if (!deletedNote) return res.status(404).json({ message: "Nothing there to delete" });
+  res.json({ ok: true });
+});
+
+export default router;

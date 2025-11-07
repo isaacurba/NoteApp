@@ -1,23 +1,17 @@
 import mongoose from "mongoose";
 
-const notesSchema = new mongoose.Schema({
-    userId:{
-        type: String,
-        index: true
-    },
-    title:{
-        type: String,
-        required: true,
-        trim: true
-    },
-    content:{
-        type: String,
-        default: "",
-    }
-}, {timestamps: true})
+const noteSchema = new mongoose.Schema(
+  {
+    userId: { type: String, index: true }, //Optional (frontend passes it)
+    title: { type: String, required: true, trim: true },
+    content: { type: String, default: "" },
+  },
 
-notesSchema.index({ userId: 1, createdAt: -1 })
+  { timestamps: true }
+);
 
-const Notes = mongoose.model("Notes", notesSchema)
+noteSchema.index({ userId: 1, createdAt: -1 });
 
-export default Notes;
+const Note = mongoose.model("Note", noteSchema);
+
+export default Note;
