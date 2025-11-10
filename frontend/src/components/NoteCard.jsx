@@ -19,7 +19,10 @@ const NoteCard = ({ note, onSave, onDelete }) => {
             <div className="flex gap-2">
               <Button
                 className="bg-slate-700 hover:bg-slate-800"
-                onClick={() => setEditing(true)}
+                onClick={() => {
+                  setDraft({ title: note.title, content: note.content });
+                  setEditing(true);
+                }}
               >
                 Edit
               </Button>
