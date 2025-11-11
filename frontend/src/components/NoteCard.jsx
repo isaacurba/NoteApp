@@ -1,14 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
+
 const NoteCard = ({ note, onSave, onDelete }) => {
   const [editing, setEditing] = useState(false);
+  
+  // Initialize draft state with the current note values
   const [draft, setDraft] = useState({
     title: note.title,
     content: note.content,
   });
+
+  // ✅ FIX: Use useEffect to update draft when the 'note' prop changes
+  // This ensures the displayed content is fresh after an external update (like a save).
+  useEffect(() => {
+    // Only update the draft if we are NOT currently editing.
+    // If we are editing, we want to preserve the user's unsaved changes in 'draft'.
+    if (!editing) {
+      setDraft({
+        title: note.title,
+        content: note.content,
+      });
+    }
+  }, [note.title, note.content, editing]); // Rerun when note content or editing status changes
 
   return (
     <Card className="overflow-hidden">
@@ -20,6 +36,7 @@ const NoteCard = ({ note, onSave, onDelete }) => {
               <Button
                 className="bg-slate-700 hover:bg-slate-800"
                 onClick={() => {
+                  // When starting to edit, ensure the draft is synchronized with the current note
                   setDraft({ title: note.title, content: note.content });
                   setEditing(true);
                 }}
@@ -69,7 +86,11 @@ const NoteCard = ({ note, onSave, onDelete }) => {
               <Button
                 type="button"
                 className="bg-slate-600 hover:bg-slate-700"
-                onClick={() => setEditing(false)}
+                onClick={() => {
+                  // Revert the draft state back to the original note content
+                  setDraft({ title: note.title, content: note.content });
+                  setEditing(false);
+                }}
               >
                 Cancel
               </Button>
