@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react"; // <--- 1. CRITICAL: Import useEffect
+// frontend/src/components/NoteCard.jsx (Corrected Version)
+import React, { useState, useEffect } from "react"; // <--- Import useEffect
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader } from "./ui/card";
 import { Input } from "./ui/input";
@@ -11,17 +12,15 @@ const NoteCard = ({ note, onSave, onDelete }) => {
     content: note.content,
   });
 
-  // ✅ CRITICAL FIX: Synchronize local draft state with incoming note prop
+  // ✅ FIX: Synchronize draft state with the incoming prop ONLY when not actively editing
   useEffect(() => {
-    // Only update the draft state if we are *not* currently editing.
-    // This prevents wiping the user's unsaved changes while they are typing.
     if (!editing) {
       setDraft({
         title: note.title,
         content: note.content,
       });
     }
-  }, [note.title, note.content, editing]); // Rerun when note content or editing status changes
+  }, [note.title, note.content, editing]); // Depend on note content and editing status
 
   return (
     <Card className="overflow-hidden">
@@ -33,7 +32,6 @@ const NoteCard = ({ note, onSave, onDelete }) => {
               <Button
                 className="bg-slate-700 hover:bg-slate-800"
                 onClick={() => {
-                  // Ensure draft is fresh when starting to edit
                   setDraft({ title: note.title, content: note.content });
                   setEditing(true);
                 }}
@@ -62,9 +60,9 @@ const NoteCard = ({ note, onSave, onDelete }) => {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              onSave(note._id, draft);
-              // setEditing(false) is typically handled here, which is correct
-              setEditing(false); 
+              // Pass the note ID and the draft payload to the parent's onSave function
+              onSave(note._id, draft); 
+              setEditing(false);
             }}
             className="space-y-2"
           >
@@ -85,7 +83,7 @@ const NoteCard = ({ note, onSave, onDelete }) => {
                 type="button"
                 className="bg-slate-600 hover:bg-slate-700"
                 onClick={() => {
-                  // Reset draft to actual note content before canceling
+                  // Reset draft to current note props before cancelling
                   setDraft({ title: note.title, content: note.content });
                   setEditing(false);
                 }}

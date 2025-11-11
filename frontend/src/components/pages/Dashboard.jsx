@@ -34,9 +34,12 @@ const Dashboard = () => {
     });
     setNotes((prev) => [...created, ...prev]);
   }
-  async function saveNote(id, payload) { // Added missing id parameter
-    // Include userId in update call
-    const updated = await NotesAPI.update(id, {...payload, userId: frontendUserId});
+  // saveNote definition is fine, it expects (id, payload)
+  async function saveNote(id, payload) {
+    const updated = await NotesAPI.update(id, {
+      ...payload,
+      userId: frontendUserId,
+    });
     setNotes((prev) => prev.map((note) => (note._id === id ? updated : note)));
   }
   async function deleteNote(id) {
@@ -62,14 +65,18 @@ const Dashboard = () => {
       )}
 
       <div className="grid gap-3">
+               {" "}
         {notes.map((n) => (
           <NoteCard
             key={n._id}
             note={n}
-            onSave={(payload) => saveNote(n._id, payload)} // Pass note ID to saveNote
+            // ✅ FIX: Use (_, payload) to capture the second argument
+            // (the draft object) passed from NoteCard, ignoring the redundant ID.
+            onSave={(_, payload) => saveNote(n._id, payload)}
             onDelete={deleteNote}
           />
         ))}
+             {" "}
       </div>
     </div>
   );
