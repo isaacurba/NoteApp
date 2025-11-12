@@ -3,13 +3,15 @@ import NoteCard from "../NoteCard";
 import NewNoteDialog from "../NewNoteDialog";
 // Fixed import path from '../lib/api' to '../../lib/api'
 import { NotesAPI } from "../../lib/api";
+import { useUser } from '@clerk/clerk-react';
 
 const Dashboard = () => {
   const [notes, setNotes] = useState([]);
   const [status, setStatus] = useState("idle");
+  const { user } = useUser();
   const [error, setError] = useState("");
   // Added missing frontendUserId - in a real app this should come from auth context
-  const frontendUserId = "user123"; // This should be replaced with actual user ID from context/auth
+  const frontendUserId = user?.id;
 
   useEffect(() => {
     (async () => {
@@ -31,6 +33,7 @@ const Dashboard = () => {
     const created = await NotesAPI.create({
       ...payload,
       userId: frontendUserId,
+      userEmail: user?.primaryEmailAddress?.emailAddress
     });
     setNotes((prev) => [...created, ...prev]);
   }
@@ -52,8 +55,7 @@ const Dashboard = () => {
     <div className="mx-auto max-w-5xl p-4 space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold">
-          {/* {user ? `${user.firstName}'s Notes` : "Your Notes"} */}
-          Your Notes
+          {user ? `${user.firstName}'s Notes` : "Your Notes"}
         </h2>
         <NewNoteDialog onCreate={createNote} />
       </div>

@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import  connectedDB  from "./config/db.js";
+import connectedDB from "./config/db.js";
 import notesRouter from "./routes/notes.js";
 
 dotenv.config();
@@ -18,8 +18,6 @@ app.use(
 
 app.use(express.json());
 
-connectedDB();
-
 app.get("/", (req, res) => {
   res.send("NOTE API UP AND RUNNING");
 });
@@ -27,5 +25,7 @@ app.get("/", (req, res) => {
 app.use("/api/notes", notesRouter);
 
 app.listen(PORT, () => {
-  console.log(`App listening on port http://localhost:${PORT}!`);
+  connectedDB().then(() => {
+    console.log(`App listening on port http://localhost:${PORT}!`);
+  });
 });
