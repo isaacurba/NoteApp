@@ -2,15 +2,17 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
-import React, { useState } from "react";
+import { useState } from "react";
 const NewNoteDialog = ({ onCreate }) => {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ title: "", content: "" });
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
     if (!form.title.trim()) return;
-    onCreate(form).then(()=>{ setForm({ title:"", content:"" }); setOpen(false); });
+    await onCreate(form);
+    setForm({ title:"", content:"" }); 
+    setOpen(false);
   } 
 
   return (

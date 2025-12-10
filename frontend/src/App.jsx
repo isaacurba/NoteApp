@@ -10,7 +10,7 @@ function App() {
         <header className="bg-white border-b">
           <div className="mx-auto max-w-5xl p-4 flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold">Week 4 • Notes App</h1>
+              <h1 className="text-2xl font-bold">Notes App</h1>
               <p className="text-slate-600 text-sm">
                 Express + MongoDB backend • React + Tailwind + Radix front-end •
                 axios
