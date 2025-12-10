@@ -67,7 +67,7 @@ const Dashboard = () => {
       )}
 
       <div className="grid gap-3">
-               {" "}
+         {" "}
         {notes.map((n) => (
           <NoteCard
             key={n._id}

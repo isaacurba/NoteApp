@@ -12,8 +12,7 @@ function App() {
             <div>
               <h1 className="text-2xl font-bold">Notes App</h1>
               <p className="text-slate-600 text-sm">
-                Express + MongoDB backend • React + Tailwind + Radix front-end •
-                axios
+                MERN stack note app
               </p>
             </div>
             <div className="flex items-center gap-3">
