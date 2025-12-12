@@ -8,5 +8,5 @@ backend/.env
 .vscode/
 dist/
 
-frontend/.env
-backend/.env
+/frontend/.env
+/backend/.env
