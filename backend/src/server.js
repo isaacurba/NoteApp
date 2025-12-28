@@ -13,6 +13,7 @@ app.use(
   cors({
     origin: process.env.ALLOWED_ORIGIN,
     methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
   })
 );
 
